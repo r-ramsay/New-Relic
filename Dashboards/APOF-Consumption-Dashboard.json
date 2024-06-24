@@ -1,0 +1,660 @@
+{
+  "name": "Annual Pool Of Funds - Monthly Review - AccountNameHere ",
+  "description": null,
+  "permissions": "PUBLIC_READ_WRITE",
+  "pages": [
+    {
+      "name": "AccountNameHere - Annual Pool Of Funds Monthly",
+      "description": null,
+      "widgets": [
+        {
+          "title": "Total Spent in Contract (Inclusive of Current Month)",
+          "layout": {
+            "column": 1,
+            "row": 1,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.bullet"
+          },
+          "rawConfiguration": {
+            "limit": 504020,
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  <ACCOUNTIDHERE>
+                ],
+                "query": "SELECT sum(monthly_spend) AS 'Total Annual Consumption' \n\nFROM (\n    \n    SELECT (filter(latest(FullPlatformUsers) * 270, WHERE eventType()='NrMTDConsumption') \n    \n    + filter(sum(GigabytesIngested) * 0.30, WHERE productLine = 'DataPlatform' AND eventType()='NrConsumption') \n    + filter(latest(consumption) * 49, WHERE metric ='CoreUsers')) AS 'monthly_spend' \n    \n    FROM NrMTDConsumption, NrConsumption FACET monthOf(timestamp)) SINCE '2023-06-27'"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Percent Of APOF Used",
+          "layout": {
+            "column": 5,
+            "row": 1,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "% Of Annual APOF used",
+                "precision": 1,
+                "type": "decimal"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  <ACCOUNTIDHERE>
+                ],
+                "query": "SELECT (sum(monthly_spend)/ 504020)* 100 AS '% Of Annual APOF used' FROM (SELECT (filter(latest(FullPlatformUsers) * 270, WHERE eventType()='NrMTDConsumption') + filter(sum(GigabytesIngested) * 0.30, WHERE productLine = 'DataPlatform' AND eventType()='NrConsumption')) AS 'monthly_spend' FROM NrMTDConsumption, NrConsumption FACET monthOf(timestamp)) SINCE '2023-06-27'"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Monthly Spend ",
+          "layout": {
+            "column": 7,
+            "row": 1,
+            "width": 6,
+            "height": 4
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.area"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  <ACCOUNTIDHERE>
+                ],
+                "query": "SELECT filter(sum(FullPlatformUsersBillable * 270), WHERE eventType()='NrConsumption') + filter(sum(CoreUsersBillable * 49), WHERE eventType()='NrConsumption') + filter(sum(GigabytesIngested) * 0.30, WHERE productLine = 'DataPlatform' AND eventType()='NrConsumption') FROM NrMTDConsumption, NrConsumption SINCE '2023-06-27' FACET monthOf(timestamp) TIMESERIES "
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Currently Set Full Users Total",
+          "layout": {
+            "column": 1,
+            "row": 4,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "FROM NrMTDConsumption SELECT latest(FullPlatformUsers) AS 'Currently Set Full Users' SINCE this month"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "GB Data Ingested THIS MONTH",
+          "layout": {
+            "column": 3,
+            "row": 4,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "GB Ingested This month",
+                "type": "decimal"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "SELECT sum(GigabytesIngested) AS 'GB Ingested This month' FROM NrConsumption WHERE productLine='DataPlatform' since this month"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "$$$ Total Spend Month to Date",
+          "layout": {
+            "column": 5,
+            "row": 4,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "$$$ Total Spend Month to Date",
+                "precision": 2,
+                "type": "decimal"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "SELECT latest(FullPlatformUsers) * 270 + latest(CoreUsers) * 49 + (sum(GigabytesIngested) - 100) * 0.30 AS '$$$ Total Spend Month to Date' FROM NrConsumption SINCE this month COMPARE WITH 1 month ago"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Monthly APOF spend breakdown",
+          "layout": {
+            "column": 7,
+            "row": 5,
+            "width": 6,
+            "height": 4
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.table"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  <ACCOUNTIDHERE>
+                ],
+                "query": "SELECT \n\n\n(filter(sum(GigabytesIngested), WHERE productLine = 'DataPlatform') - 100) * 0.30 \n\n+ filter(latest(FullPlatformUsers)*270, where metric= 'FullPlatformUsers') + filter(latest(CoreUsers)*49, where metric= 'CoreUsers') as 'Total $', \n\nfilter(sum(GigabytesIngested) - 100, WHERE productLine = 'DataPlatform') as 'Gbs Ingested', \n\n(filter(sum(GigabytesIngested), WHERE productLine = 'DataPlatform') - 100) *0.30 as 'Gbs Ingested $', \n\nfilter(latest(FullPlatformUsers), where metric= 'FullPlatformUsers') as 'Full Users', \n\nfilter(latest(FullPlatformUsers)*270, where metric= 'FullPlatformUsers') as 'Full Users $', \n\nfilter(latest(CoreUsers), where metric= 'CoreUsers') as 'Core Users', \n\nfilter(latest(CoreUsers)*49, where metric= 'CoreUsers') as 'Core Users $' FROM NrConsumption \n\n\nFACET monthOf(timestamp) SINCE '2023-06-27'"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "$$$ Spend on Users This Month",
+          "layout": {
+            "column": 1,
+            "row": 7,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "$$$ Spend on Users This Month",
+                "type": "decimal"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "SELECT latest(FullPlatformUsers) * 270 + latest(CoreUsers) * 49 AS '$$$ Spend on Full + Core Users This Month' FROM NrConsumption since this month"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "$$ Spend This Month DATA",
+          "layout": {
+            "column": 3,
+            "row": 7,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "$$$ Spend on Data This Month",
+                "type": "decimal"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "SELECT (sum(GigabytesIngested) - 100) * 0.30 AS '$$$ Spend on Data This Month' FROM NrConsumption WHERE productLine='DataPlatform' since this month"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "$$ Spend Last Month TOTAL",
+          "layout": {
+            "column": 5,
+            "row": 7,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "filter",
+                "precision": 0,
+                "type": "decimal"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "SELECT filter(latest(FullPlatformUsersBillable) * 270, WHERE eventType()='NrMTDConsumption') + filter(sum(GigabytesIngested) * 0.30, WHERE productLine = 'DataPlatform' AND eventType()='NrConsumption') FROM NrMTDConsumption, NrConsumption SINCE last month UNTIL this month COMPARE WITH 1 month ago"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Users Month on Month",
+          "layout": {
+            "column": 1,
+            "row": 9,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "FROM NrMTDConsumption SELECT latest(FullPlatformUsers) + latest(CoreUsers) as 'Full + Core Users' SINCE last month UNTIL this month COMPARE WITH 1 month ago"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "DATA Month on Month",
+          "layout": {
+            "column": 3,
+            "row": 9,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "Gigabytes",
+                "type": "decimal"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "SELECT sum(GigabytesIngested) AS 'Gigabytes' FROM NrConsumption WHERE productLine='DataPlatform' since last month UNTIL this month COMPARE WITH  1 month ago"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "$$ Spent Per Account (Data) Last Month",
+          "layout": {
+            "column": 5,
+            "row": 9,
+            "width": 4,
+            "height": 4
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.pie"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": true
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "SELECT sum(GigabytesIngested) * 0.30 AS '$$ Per Account' FROM NrConsumption WHERE productLine='DataPlatform' FACET consumingAccountName  since last month UNTIL this month"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "$$ Spent Per Data Type (Data) Last Month",
+          "layout": {
+            "column": 9,
+            "row": 9,
+            "width": 4,
+            "height": 4
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.pie"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": true
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "SELECT (sum(GigabytesIngested) * 0.30) AS '$$ Spent Per Product' FROM NrConsumption WHERE productLine='DataPlatform' FACET CASES ( WHERE usageMetric LIKE '%APM%' AS 'APM Events' , WHERE usageMetric LIKE '%Metrics%' AS 'Metrics' , WHERE usageMetric LIKE '%MobileEvents%' AS 'Mobile events' , WHERE usageMetric LIKE '%Tracing%' AS 'Tracing' , WHERE usageMetric LIKE '%InfraHost%' AS 'Infrastructure hosts' , WHERE usageMetric LIKE '%InfraIntegration%' AS 'Infrastructure integrations' , WHERE usageMetric LIKE '%InfraProcess%' AS 'Infrastructure processes' , WHERE usageMetric LIKE '%CustomEvents%' AS 'Custom events' , WHERE usageMetric LIKE '%BrowserEvents%' AS 'Browser events' , WHERE usageMetric LIKE '%Logging%' AS 'Logging' , WHERE usageMetric LIKE '%Serverless%' AS 'Serverless') LIMIT max  since 30 days ago"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "$$$ Spend on Users Last Month",
+          "layout": {
+            "column": 1,
+            "row": 11,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "$$$ Spend on Users Last Month",
+                "type": "decimal"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "FROM NrMTDConsumption SELECT latest(FullPlatformUsers * 270) + latest(CoreUsers * 49) AS '$$$ Spend on Users Last Month' SINCE last month UNTIL this month COMPARE WITH 1 month ago"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "$$$ Spend Last Month DATA",
+          "layout": {
+            "column": 3,
+            "row": 11,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "$$$ on Data Last Month",
+                "type": "decimal"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "SELECT (sum(GigabytesIngested) - 100) * 0.30 AS '$$$ on Data Last Month' FROM NrConsumption WHERE productLine='DataPlatform' since last month UNTIL this month COMPARE WITH  1 month ago"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Data Use By Type and Account",
+          "layout": {
+            "column": 1,
+            "row": 13,
+            "width": 12,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.table"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "SELECT filter(sum(GigabytesIngested), WHERE productLine = 'DataPlatform') AS 'Total GBs',filter(sum(GigabytesIngested), WHERE usageMetric ='InfraIntegrationBytes') AS 'Infra Integration', filter(sum(GigabytesIngested), WHERE usageMetric ='InfraProcessBytes') AS 'Infra Process', filter(sum(GigabytesIngested), WHERE usageMetric ='MetricsBytes') AS 'Metrics', filter(sum(GigabytesIngested), WHERE usageMetric ='InfraHostBytes') AS 'Infra Host', filter(sum(GigabytesIngested), WHERE usageMetric ='LoggingBytes') AS 'Logging', filter(sum(GigabytesIngested), WHERE usageMetric ='TracingBytes') AS 'Tracing', filter(sum(GigabytesIngested), WHERE usageMetric ='ApmEventsBytes') AS 'APM Events', filter(sum(GigabytesIngested), WHERE usageMetric ='ServerlessBytes') AS 'Serverless', filter(sum(GigabytesIngested), WHERE usageMetric ='BrowserEventsBytes') AS 'Browser Events', filter(sum(GigabytesIngested), WHERE usageMetric ='MobileEventsBytes') AS 'Mobile Events', filter(sum(GigabytesIngested), WHERE usageMetric ='CustomEventsBytes') AS 'Custom Events' FROM NrConsumption SINCE this month FACET consumingAccountId AS 'Account ID', consumingAccountName AS 'Account Name' LIMIT MAX"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Full Users By Month",
+          "layout": {
+            "column": 1,
+            "row": 16,
+            "width": 2,
+            "height": 4
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.bar"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "FROM NrMTDConsumption SELECT latest(FullPlatformUsers) SINCE '2022-06-27' FACET monthOf(timestamp)"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Core Users By Month",
+          "layout": {
+            "column": 3,
+            "row": 16,
+            "width": 2,
+            "height": 4
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.bar"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "FROM NrMTDConsumption SELECT latest(CoreUsers) SINCE '2022-06-27' FACET monthOf(timestamp)"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": true
+            }
+          }
+        },
+        {
+          "title": "Monthly View $$ Spend",
+          "layout": {
+            "column": 5,
+            "row": 16,
+            "width": 2,
+            "height": 4
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.bar"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "SELECT filter(latest(FullPlatformUsers) * 270, WHERE eventType()='NrMTDConsumption') + filter(sum(GigabytesIngested) * 0.30, WHERE productLine = 'DataPlatform' AND eventType()='NrConsumption') FROM NrMTDConsumption, NrConsumption SINCE '2022-06-27' FACET monthOf(timestamp)"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Monthly Spend vs Monthly Target",
+          "layout": {
+            "column": 7,
+            "row": 16,
+            "width": 6,
+            "height": 4
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountId": <ACCOUNTIDHERE>,
+                "query": "SELECT filter(sum(FullPlatformUsers) * (270/720), WHERE eventType()='NrConsumption') + filter(sum(GigabytesIngested) * 0.30, WHERE productLine = 'DataPlatform' AND eventType()='NrConsumption') AS 'Monthly Spend', latest(273240/12) AS 'Monthly Goal' FROM NrMTDConsumption, NrConsumption SINCE '2022-06-27' TIMESERIES 1 month"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "yAxisLeft": {
+              "zero": true
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variables": []
+}
