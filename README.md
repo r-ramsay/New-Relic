@@ -8,6 +8,6 @@
 ### Introduction
 This repository contains various New Relic scripts, dashboards, and other tools to enhance observability and performance monitoring.
 
-###
-Auto-Update the New Relic Windows Infrastrucutre Agent with the following script - (https://github.com/r-ramsay/New-Relic/blob/main/Scripts/WindowsAutoUpdateInfraAgent.ps1)
+### Scripts
+[Auto-Update the New Relic Windows Infrastrucutre Agent](https://github.com/r-ramsay/New-Relic/blob/main/Scripts/WindowsAutoUpdateInfraAgent.ps1)
 
