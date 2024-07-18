@@ -31,6 +31,7 @@ Ensure your .env file is set up with your New Relic API key.
 ## Run the script:
 
 python export_synthetic_scripts.py
+
 The script will fetch all synthetic monitors from your New Relic account, filter for Scripted Browser and Scripted API monitors, and save each script as a text file in the current directory.
 
 ## How It Works
@@ -39,7 +40,7 @@ Filter Monitors: It filters the monitors to only include Scripted Browser and Sc
 Fetch Scripts: For each filtered monitor, the script fetches the script content.
 Save Scripts: The scripts are saved as text files with sanitized filenames to avoid issues with special characters.
 
-#This will output something like:
+## This will output something like:
 
 
 Starting the synthetic script export process...
@@ -49,10 +50,10 @@ Exporting synthetic script: Monitor 1 - Script (GUID: Mzk5Mjg1MXxTWU5USHxNT05JVE
 Saved synthetic script to Monitor_1_-_Script.txt
 
 
-#Troubleshooting
+## Troubleshooting
 Ensure your New Relic API key has the necessary permissions to access synthetic monitors.
 Verify your .env file is correctly set up with the NEW_RELIC_API_KEY.
 Check for any error messages printed by the script to diagnose issues.
 
-#Contributing
+## Contributing
 Contributions are welcome! Please fork the repository and submit a pull request for review.
