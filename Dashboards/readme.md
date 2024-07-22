@@ -11,3 +11,8 @@ This will query your usage of scanned events in each account, this should be dep
 
 You will need to update <ACCOUNTNUMBERHERE> with your actual account ID, e.g. 1235639
 
+## APOF Consumption Dashboard
+
+This will help you work out your current New Relic Consumption. 
+
+You will need to update <ACCOUNTNUMBERHERE> with your actual account ID, e.g. 1235639
